@@ -7,12 +7,12 @@ typedef struct {
     int expon;
 } polynomial;
 polynomial terms[MAX_TERMS];
-int avail = 0;
+int avail = 5;
 void padd(int startA, int finishA, int startB, int finishB, int *startD, int *finishD);
 void attach(float coefficient, int exponent);
-
+void printPoly(int start_idx, int end_idx);
 int main() {
-    printf("%d", COMPARE(1,2));
+//    printf("%d", COMPARE(1,2));
     // startA = 0
     // finishA = 1
     terms[0].coef = 1.1;
@@ -33,7 +33,9 @@ int main() {
 
     padd(0, 1, 2, 4, &result_start_idx, &result_end_idx);
 
-    printf("result_idx: %d, end_idx: %d", result_start_idx, result_end_idx);
+//    printf("result_idx: %d, end_idx: %d", result_start_idx, result_end_idx);
+
+    printPoly(result_start_idx, result_end_idx);
 
     return 0;
 }
@@ -44,8 +46,8 @@ void padd(int startA, int finishA, int startB, int finishB, int *startD, int *fi
     while(startA <= finishA && startB <= finishB){
         switch(COMPARE(terms[startA].expon, terms[startB].expon)){
             case -1:
-                attach(terms[startA].coef, terms[startA].expon);
-                startA++;
+                attach(terms[startB].coef, terms[startB].expon);
+                startB++;
                 break;
             case 0:
                 coefficient = terms[startA].coef + terms[startB].coef;
@@ -55,8 +57,8 @@ void padd(int startA, int finishA, int startB, int finishB, int *startD, int *fi
                 startB++;
                 break;
             case 1:
-                attach(terms[startB].coef, terms[startB].expon);
-                startB++;
+                attach(terms[startA].coef, terms[startA].expon);
+                startA++;
                 break;
         }
     }
@@ -73,6 +75,12 @@ void attach(float coefficient, int exponent){
 }
 
 void printPoly(int start_idx, int end_idx){
+    for(;start_idx <= end_idx; start_idx++){
+        if(start_idx != end_idx){
+            printf("%.1fx^%d + ", terms[start_idx].coef, terms[start_idx].expon);
+        } else {
+            printf("%.1fx^%d", terms[start_idx].coef, terms[start_idx].expon);
+        }
 
-    
+    }
 }
