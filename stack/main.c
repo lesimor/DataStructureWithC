@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #define MAX_STACK_SIZE 100
 #define FALSE 0
 #define TRUE 1
@@ -9,8 +10,13 @@ typedef struct{
     int key;
 } element;
 
-// 스택 배열 선언
-element stack[MAX_STACK_SIZE];
+// 현재 할당된 용량
+int capacity = 1;
+
+// 스택 포인터 선언
+// 스택을 동적으로 사용
+element *stack;
+
 
 // top위치
 int top = -1;
@@ -21,13 +27,18 @@ int isEmpty(){
     return top <= -1 ? TRUE : FALSE;
 }
 
-// 스택이 가득 차있는지 확인.
-int isFull(){
-    return top >= MAX_STACK_SIZE ? TRUE : FALSE;
+// 스택이 가득 차있는지 확인 후 차있으면 두배 확장
+void isFullCheck(){
+    if (top >= capacity - 1){
+        realloc(stack, 2 * sizeof(element));
+        capacity *= 2;
+        printf("스택이 두배 늘어났습니다.(용량: %d)\n", capacity);
+    }
 }
 
 // 스택에 element를 push
 void push(int num){
+    isFullCheck();
     printf("%d 삽입!!\n", num);
     stack[++top].key = num;
 }
@@ -36,6 +47,7 @@ void push(int num){
 int pop(){
     if(isEmpty()){
         printf("스택이 비어있어서 pop할 수 없습니다.");
+        return 0;
     } else {
         printf("pop!!!%d이 튀어나왔다.\n", stack[top].key);
         return stack[top--].key;
@@ -49,7 +61,7 @@ void printStack(){
         printf("스택이 비어있습니다.\n");
     } else {
         int i;
-        printf("-----stack------\n");
+        printf("-----stack(MaxSize: %d)------\n", capacity);
         for(i = top ; i >= 0 ; i--){
             printf("|| %d ||\n", stack[i].key);
         }
@@ -59,6 +71,7 @@ void printStack(){
 }
 
 int main() {
+    stack = (element*)malloc(sizeof(element));
     printStack();
     push(3);
     printStack();
@@ -67,6 +80,13 @@ int main() {
     push(5);
     printStack();
     push(2);
+    printStack();
+    push(2);
+    printStack();
+    push(2);
+    printStack();
+    push(2);
+
 
     printStack();
     pop();
@@ -78,5 +98,6 @@ int main() {
     pop();
     printStack();
     pop();
+    printStack();
     return 0;
 }
